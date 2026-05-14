@@ -65,13 +65,11 @@ import * as attestTPM from "attest-tpm"
         let responseContent
 
         if (request.method?.[3]) {
-            for await (const content of request) {
-                responseContent = (await attestTPM.authorityIssue(
-                    authorityCers.Intermediate,
-                    content,
-                    signCer
-                )).response
-            }
+            responseContent = (await attestTPM.authorityIssue(
+                authorityCers.Intermediate,
+                (await request.toArray())[0],
+                signCer
+            )).response
         } else {
             responseContent = authorityCers["Trusted Root"]
         }
